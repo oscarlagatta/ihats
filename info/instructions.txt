@@ -1,0 +1,6 @@
+npm install -g strapi
+npm install -g strapi@alpha
+
+run the following command
+-------------------------
+strapi new server
