@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class RegisterPage extends StatefulWidget {
+  @override
   RegisterPageState createState() => RegisterPageState();
 }
 
@@ -96,7 +97,7 @@ class RegisterPageState extends State<RegisterPage> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10.0))),
             color: Theme.of(context).primaryColor,
-            onPressed: () => _submit,
+            onPressed: _submit,
           ),
           FlatButton(
             child: Text('Existing User? Login'),
