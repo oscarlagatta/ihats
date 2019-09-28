@@ -1,36 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class RegisterPage extends StatefulWidget {
-  RegisterPageState createState() => RegisterPageState();
+class LoginPage extends StatefulWidget {
+  @override
+  LoginPageState createState() => LoginPageState();
 }
 
-class RegisterPageState extends State<RegisterPage> {
+class LoginPageState extends State<LoginPage> {
 
   final _formKey = GlobalKey<FormState>();
 
-  String _username, _email, _password;
+  String _email, _password;
 
   Widget _showTitle() {
-    return Text('Register', style: Theme.of(context).textTheme.headline);
-  }
-
-  Widget _showUserNameInput() {
-    return Padding(
-      padding: EdgeInsets.only(top: 20.0),
-      child: TextFormField(
-        onSaved: (val) => _username = val,
-        validator: (val) => val.length < 6 ? 'Username too short' : null,
-        decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: 'Username',
-            hintText: 'Enter Username, min length 7',
-            icon: Icon(
-              Icons.face,
-              color: Colors.grey,
-            )),
-      ),
-    );
+    return Text('Login', style: Theme.of(context).textTheme.headline);
   }
 
   Widget _showEmailInput() {
@@ -88,8 +71,8 @@ class RegisterPageState extends State<RegisterPage> {
             onPressed: () => _submit,
           ),
           FlatButton(
-            child: Text('Existing User? Login'),
-            onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
+            child: Text('New User? Register'),
+            onPressed: () => Navigator.pushReplacementNamed(context, '/register'),
           )
         ],
       ),
@@ -97,37 +80,37 @@ class RegisterPageState extends State<RegisterPage> {
   }
 
   void _submit() {
-    final form  = _formKey.currentState;
-   
-    if(form.validate()) {
+
+    final form = _formKey.currentState;
+
+    if (form.validate()) {
       form.save();
-
-      print('Username: $_username, Email: $_email, Password: $_password');
-
+      print('Email: $_email, Password: $_password');
     }
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Register in iHat')),
+      appBar: AppBar(title: Text('Login')),
       body: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
-          child: Center(
-            child: SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    _showTitle(),
-                    _showUserNameInput(),
-                    _showEmailInput(),
-                    _showPasswordInput(),
-                    _showFormActions(),
-                  ],
-                ),
-              ),
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  _showTitle(),
+                  _showEmailInput(),
+                  _showPasswordInput(),
+                  _showFormActions()
+                ],
+              )
             ),
-          )),
+          )
+        ),
+      )
     );
   }
+
 }
