@@ -79,7 +79,7 @@ class LoginPageState extends State<LoginPage> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10.0))),
             color: Theme.of(context).primaryColor,
-            onPressed: () => _submit,
+            onPressed: _submit,
           ),
           FlatButton(
             child: Text('New User? Register'),
