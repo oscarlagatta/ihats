@@ -140,17 +140,27 @@ class RegisterPageState extends State<RegisterPage> {
 
     final responseData = json.decode(response.body);
 
-    setState(() {
-      return _isSubmitting = false;
-    });
+    if (response.statusCode == 200) {
 
-    _showSuccessSnak();
+        setState(() {
+          return _isSubmitting = false;
+        });
 
-    // redirect user
-    _redirectUser();
+        _showSuccessSnack();
 
-    print(responseData);
+        _redirectUser();
 
+        print(responseData);
+
+    } else {
+        setState(() {
+          return _isSubmitting = false;
+        });
+
+        final String errorMsg = responseData['message'];
+
+        _showErrorSnack(errorMsg);
+    }
   }
 
   void _redirectUser() {
@@ -159,7 +169,7 @@ class RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  void _showSuccessSnak() {
+  void _showSuccessSnack() {
     final snackBar = SnackBar(
       content: Text('User $_username successfully created!' ,
         style: TextStyle(
@@ -170,7 +180,20 @@ class RegisterPageState extends State<RegisterPage> {
     _scaffoldKey.currentState.showSnackBar(snackBar);
 
     _formKey.currentState.reset();
+  }
 
+  void _showErrorSnack(String errorMsg) {
+
+    final snackBar = SnackBar(
+      content: Text(errorMsg,
+        style: TextStyle(
+          color: Colors.red,
+        ),),
+    );
+
+    _scaffoldKey.currentState.showSnackBar(snackBar);
+
+    throw Exception('Error Registering: $errorMsg');
 
   }
 
