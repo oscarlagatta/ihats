@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -114,9 +116,24 @@ class RegisterPageState extends State<RegisterPage> {
     if(form.validate()) {
       form.save();
 
-      print('Username: $_username, Email: $_email, Password: $_password');
+      // print('Username: $_username, Email: $_email, Password: $_password');
+      _registerUser();
 
     }
+  }
+
+  void _registerUser() async {
+
+    http.Response response = await http.post('http://localhost:1337/auth/local/register', body: {
+        'username': _username,
+        'email': _email,
+        'password': _password
+      });
+
+    final responseData = json.decode(response.body);
+
+    print(responseData);
+
   }
 
   Widget build(BuildContext context) {
