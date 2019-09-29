@@ -10,11 +10,12 @@ class RegisterPage extends StatefulWidget {
 
 class RegisterPageState extends State<RegisterPage> {
 
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
 
   String _username, _email, _password;
 
-  bool _obscureText = true;
+  bool _isSubmitting, _obscureText = true;
 
   Widget _showTitle() {
     return Text('Register', style: Theme.of(context).textTheme.headline);
@@ -89,7 +90,10 @@ class RegisterPageState extends State<RegisterPage> {
       padding: EdgeInsets.only(top: 20.0),
       child: Column(
         children: <Widget>[
-          RaisedButton(
+          _isSubmitting == true ? CircularProgressIndicator(
+              valueColor: 
+                AlwaysStoppedAnimation(Theme.of(context).primaryColor)
+            ,) : RaisedButton(
             child: Text('Submit',
                 style: Theme.of(context)
                     .textTheme
@@ -124,6 +128,10 @@ class RegisterPageState extends State<RegisterPage> {
 
   void _registerUser() async {
 
+    setState( () {
+      return _isSubmitting = true;
+    });
+
     http.Response response = await http.post('http://localhost:1337/auth/local/register', body: {
         'username': _username,
         'email': _email,
@@ -132,12 +140,43 @@ class RegisterPageState extends State<RegisterPage> {
 
     final responseData = json.decode(response.body);
 
+    setState(() {
+      return _isSubmitting = false;
+    });
+
+    _showSuccessSnak();
+
+    // redirect user
+    _redirectUser();
+
     print(responseData);
+
+  }
+
+  void _redirectUser() {
+    Future.delayed(Duration(seconds: 2),
+      () => Navigator.pushReplacementNamed(context, '/products')
+    );
+  }
+
+  void _showSuccessSnak() {
+    final snackBar = SnackBar(
+      content: Text('User $_username successfully created!' ,
+        style: TextStyle(
+          color: Colors.green
+        ),),
+    );
+
+    _scaffoldKey.currentState.showSnackBar(snackBar);
+
+    _formKey.currentState.reset();
+
 
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(title: Text('Register in iHat')),
       body: Container(
           padding: EdgeInsets.symmetric(horizontal: 20.0),

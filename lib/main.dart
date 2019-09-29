@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ihats/pages/login_page.dart';
+import 'package:ihats/pages/products_page.dart';
 import 'package:ihats/pages/register_page.dart';
 
 void main() => runApp(MyApp());
@@ -10,8 +11,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
+        '/products': (BuildContext context) => ProductsPage(),
         '/login': (BuildContext context) => LoginPage(),
-        '/register': (BuildContext context) => RegisterPage()
+        '/register': (BuildContext context) => RegisterPage(),
       },
       title: 'iHats',
       theme: ThemeData(
