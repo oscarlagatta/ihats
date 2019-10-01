@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:http/http.dart' as http; 
+import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -7,12 +9,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> {
-
+  
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
 
   String _email, _password;
 
-  bool _obscureText = true;
+  bool _isSubmitting, _obscureText = true;
 
   Widget _showTitle() {
     return Text('Login', style: Theme.of(context).textTheme.headline);
@@ -69,6 +72,11 @@ class LoginPageState extends State<LoginPage> {
       padding: EdgeInsets.only(top: 20.0),
       child: Column(
         children: <Widget>[
+          _isSubmitting == true  ? CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation(
+              Theme.of(context).accentColor,
+            ),
+          ) :
           RaisedButton(
             child: Text('Submit',
                 style: Theme.of(context)
@@ -96,12 +104,87 @@ class LoginPageState extends State<LoginPage> {
 
     if (form.validate()) {
       form.save();
-      print('Email: $_email, Password: $_password');
+
+      _loginUser();
+      // print('Email: $_email, Password: $_password');
     }
+  }
+
+  void _loginUser() async {
+
+    setState(() {
+      return _isSubmitting = true;
+    });
+
+    http.Response response = await http.post(
+      'http://localhost:1337/auth/local',
+      body: {
+        "identifier": _email,
+        "password": _password
+      }
+    );
+
+    final responseData = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      // login
+      setState(() {
+        return _isSubmitting = false;
+      });
+
+      // show success snack
+      _showSuccessSnack();
+
+      // redirect the user to the Products screen
+      _redirectUser();
+
+    } else {
+      setState(() {
+          return _isSubmitting = false;
+      });
+
+      final String errorMsg = responseData['message'];
+
+      _showErrorSnack(errorMsg);
+    }
+  }
+
+  void _redirectUser() {
+    Future.delayed(Duration(seconds: 2),
+      () => Navigator.pushReplacementNamed(context, '/products')
+    );
+  }
+
+  void _showErrorSnack(String errorMsg) {
+    final snackBar = SnackBar(
+      content: Text(errorMsg,
+        style: TextStyle(
+          color: Colors.red,
+        ),),
+    );
+
+    _scaffoldKey.currentState.showSnackBar(snackBar);
+
+    throw Exception('Error Registering: $errorMsg');
+  }
+
+  void _showSuccessSnack() {
+    final snackbar = SnackBar(
+      content: Text('User successfully logged in!!!!',
+        style: TextStyle(
+          color: Colors.green
+        )),
+    );
+
+    _scaffoldKey.currentState.showSnackBar(snackbar);
+
+    _formKey.currentState.reset();
+
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(title: Text('Login')),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 20.0),
