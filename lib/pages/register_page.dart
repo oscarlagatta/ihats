@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -146,6 +147,8 @@ class RegisterPageState extends State<RegisterPage> {
           return _isSubmitting = false;
         });
 
+        _storeUserData(responseData);
+
         _showSuccessSnack();
 
         _redirectUser();
@@ -168,6 +171,19 @@ class RegisterPageState extends State<RegisterPage> {
       () => Navigator.pushReplacementNamed(context, '/products')
     );
   }
+
+  _storeUserData(responseData) async {
+      
+      final prefs = await SharedPreferences.getInstance(); // either get or set values from shared preferences we always call this method.
+
+      Map<String, dynamic> user = responseData['user']; // Map 
+
+      // jwt (JASON WEB TOKEN)
+      user.putIfAbsent('jwt', () => responseData['jwt']);
+
+      prefs.setString('user', json.encode(user));
+  }
+
 
   void _showSuccessSnack() {
     final snackBar = SnackBar(

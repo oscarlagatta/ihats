@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http; 
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class LoginPage extends StatefulWidget {
   @override
@@ -132,6 +134,8 @@ class LoginPageState extends State<LoginPage> {
         return _isSubmitting = false;
       });
 
+      _storeUserData(responseData);
+
       // show success snack
       _showSuccessSnack();
 
@@ -153,6 +157,18 @@ class LoginPageState extends State<LoginPage> {
     Future.delayed(Duration(seconds: 2),
       () => Navigator.pushReplacementNamed(context, '/products')
     );
+  }
+
+  void _storeUserData(responseData) async {
+
+    final prefs = await SharedPreferences.getInstance();
+
+    Map<String, dynamic> user = responseData['user'];
+
+    user.putIfAbsent('jwt', () => responseData['jwt']);
+
+    prefs.setString('user', json.encode(user));
+
   }
 
   void _showErrorSnack(String errorMsg) {

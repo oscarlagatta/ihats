@@ -33,3 +33,18 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+/**
+ * shared preferences for presisting user data
+ * setting up redux 
+ * getting user data through redux
+ * modeling the user data
+ * improving products page
+ * style using gradinets
+ * adding product content
+ * gried view builder
+ * formatting individual products
+ * modeling data
+ * using media query widget
+ * 
+ */
