@@ -4,6 +4,7 @@ import 'package:ihats/models/app_state.dart';
 import 'package:ihats/pages/login_page.dart';
 import 'package:ihats/pages/products_page.dart';
 import 'package:ihats/pages/register_page.dart';
+import 'package:ihats/state/actions.dart';
 import 'package:ihats/state/reducers.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
@@ -28,7 +29,13 @@ class MyApp extends StatelessWidget {
       store: store,
       child: MaterialApp(
       routes: {
-        '/products': (BuildContext context) => ProductsPage(),
+        '/products': (BuildContext context) => ProductsPage(
+          onInit: () {
+            // dispatch an action (getUserAction) to grab the user data
+            // interact with the api, with a thunk action
+            StoreProvider.of<AppState>(context).dispatch(getUserAction);
+          }
+        ),
         '/login': (BuildContext context) => LoginPage(),
         '/register': (BuildContext context) => RegisterPage(),
       },
@@ -54,6 +61,7 @@ class MyApp extends StatelessWidget {
 /**
  * shared preferences for presisting user data (X)
  * setting up redux (X)
+ * // side note FLUTTER FOR WEB. https://developers.google.com/web/progressive-web-apps/ 
  * getting user data through redux
  * modeling the user data
  * improving products page
