@@ -1,15 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:ihats/models/app_state.dart';
 import 'package:ihats/pages/login_page.dart';
 import 'package:ihats/pages/products_page.dart';
 import 'package:ihats/pages/register_page.dart';
+import 'package:ihats/state/reducers.dart';
+import 'package:redux/redux.dart';
+import 'package:redux_thunk/redux_thunk.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  
+  final store = Store<AppState>(appReducer, initialState: AppState.initial(), middleware: [thunkMiddleware] );
+  runApp(MyApp(store: store,));
+  
+}
 
 class MyApp extends StatelessWidget {
+
+  final Store<AppState> store;
+
+  MyApp({ this.store });
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return StoreProvider( 
+      store: store,
+      child: MaterialApp(
       routes: {
         '/products': (BuildContext context) => ProductsPage(),
         '/login': (BuildContext context) => LoginPage(),
@@ -30,13 +47,13 @@ class MyApp extends StatelessWidget {
         )
       ),
       home: RegisterPage(),
-    );
+    ));
   }
 }
 
 /**
- * shared preferences for presisting user data
- * setting up redux 
+ * shared preferences for presisting user data (X)
+ * setting up redux (X)
  * getting user data through redux
  * modeling the user data
  * improving products page
