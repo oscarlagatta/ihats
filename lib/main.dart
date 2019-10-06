@@ -62,8 +62,8 @@ class MyApp extends StatelessWidget {
  * shared preferences for presisting user data (X)
  * setting up redux (X)
  * // side note FLUTTER FOR WEB. https://developers.google.com/web/progressive-web-apps/ 
- * getting user data through redux
- * modeling the user data
+ * getting user data through redux (x)
+ * modeling the user data (x)
  * improving products page
  * style using gradinets
  * adding product content
