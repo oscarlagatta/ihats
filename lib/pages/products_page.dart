@@ -3,7 +3,20 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:ihats/models/app_state.dart';
 
 
-
+final gradientBackground = BoxDecoration(
+  gradient: LinearGradient(
+    begin: Alignment.bottomLeft,
+    end: Alignment.topRight,
+    stops: [0.1,0.3,0.5,0.7,0.9],
+    colors: [
+      Colors.grey[300],
+      Colors.grey[400],
+      Colors.grey[500],
+      Colors.grey[600],
+      Colors.grey[700],
+    ]
+  )
+);
 class ProductsPage extends StatefulWidget {
 
   final void Function() onInit;
@@ -54,7 +67,31 @@ class _ProductsPageState extends State<ProductsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar,
-      body: Container(child: Text('products page'),),
+      body: Container(
+        decoration: gradientBackground,
+        child: StoreConnector<AppState, AppState>(
+          converter: (store) => store.state,
+          builder: (_, state) {
+            return Column(
+              children: <Widget>[
+                Expanded(
+                  child: SafeArea(
+                    top: false,
+                    bottom: false,
+                      child: GridView.builder(
+                        itemCount: state.products.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2
+                        ),
+                        itemBuilder: (context, i) => Text(state.products[i]['name']),
+                    ),
+                  ),
+                )
+              ],
+            );
+          },
+        ),
+      ),
     );
   }
 

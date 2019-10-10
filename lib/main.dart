@@ -34,6 +34,8 @@ class MyApp extends StatelessWidget {
             // dispatch an action (getUserAction) to grab the user data
             // interact with the api, with a thunk action
             StoreProvider.of<AppState>(context).dispatch(getUserAction);
+            // get products
+            StoreProvider.of<AppState>(context).dispatch(getProductsAction);
           }
         ),
         '/login': (BuildContext context) => LoginPage(),
